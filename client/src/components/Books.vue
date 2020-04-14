@@ -5,7 +5,10 @@
         <h1>Books</h1>
         <hr />
         <br /><br />
-        <button type="button" class="btn btn-success btn-sm" v-b-modal.book-modal>Add Book</button>
+        <alert :message="message" :dismissCountDown="dismissCountDown"></alert>
+        <button type="button" class="btn btn-success btn-sm" v-b-modal.book-modal>
+          Add a Book
+        </button>
         <br /><br />
         <table class="table table-hover">
           <thead>
@@ -71,6 +74,7 @@
 
 <script>
 import axios from "axios";
+import Alert from "./Alert.vue";
 
 export default {
   data() {
@@ -80,7 +84,9 @@ export default {
         title: "",
         author: "",
         read: []
-      }
+      },
+      message: "",
+      dismissCountDown: 0
     };
   },
   methods: {
@@ -99,6 +105,8 @@ export default {
       try {
         await axios.post(path, payload);
         this.getBooks();
+        this.message = "Just added a book, congrats!";
+        this.dismissCountDown = 3;
       } catch (error) {
         // eslint-disable-next-line
         console.log(error);
@@ -127,10 +135,20 @@ export default {
       evt.preventDefault();
       this.$refs.addBookModal.hide();
       this.initForm();
+      this.message = "";
+      this.showMessage = false;
+    },
+    hideMessage() {
+      setTimeout(() => {
+        this.showMessage = false;
+      }, 1500);
     }
   },
   created() {
     this.getBooks();
+  },
+  components: {
+    alert: Alert
   }
 };
 </script>
