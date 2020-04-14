@@ -37,7 +37,9 @@
                   >
                     Update
                   </button>
-                  <button type="button" class="btn btn-danger btn-sm">Delete</button>
+                  <button type="button" class="btn btn-danger btn-sm" @click="onDeleteBook(book)">
+                    Delete
+                  </button>
                 </div>
               </td>
             </tr>
@@ -158,10 +160,10 @@ export default {
     async addBook(payload) {
       const path = "http://localhost:5000/books";
       try {
-        await axios.post(path, payload);
+        const response = await axios.post(path, payload);
+        this.alert.message = response.data.message; // "Just added a book, congrats!";
+        this.alert.dismissCountDown = 4;
         this.getBooks();
-        this.alert.message = "Just added a book, congrats!";
-        this.alert.dismissCountDown = 3;
       } catch (error) {
         // eslint-disable-next-line
         console.log(error);
@@ -195,14 +197,10 @@ export default {
       this.$refs.addBookModal.hide();
       this.initForm();
       this.message = "";
-      this.showMessage = false;
     },
     editBook(book) {
-      this.editForm = {
-        title: book.title,
-        author: book.author,
-        read: [book.read]
-      };
+      this.editForm = book;
+      this.editForm.read = [book.read];
     },
     onSubmitUpdate(evt) {
       evt.preventDefault();
@@ -219,10 +217,12 @@ export default {
     async updateBook(payload, bookID) {
       const path = `http://localhost:5000/books/${bookID}`;
       try {
-        await axios.put(path, payload);
+        const response = await axios.put(path, payload);
+        // eslint-disable-next-line
+        console.log("update", response);
+        this.alert.message = response.data.message;
+        this.alert.dismissCountDown = 4;
         this.getBooks();
-        this.alert.message = "Book has been updated";
-        this.alert.dismissCountDown = 3;
       } catch (error) {
         // eslint-disable-next-line
         console.error(error);
@@ -234,6 +234,22 @@ export default {
       this.$refs.editBookModal.hide();
       this.initForm();
       this.getBooks(); // why?
+    },
+    async removeBook(bookID) {
+      const path = `http://localhost:5000/books/${bookID}`;
+      try {
+        const response = await axios.delete(path);
+        this.getBooks();
+        this.alert.message = response.data.message;
+        this.alert.dismissCountDown = 4;
+      } catch (error) {
+        // eslint-disable-next-line
+        console.error(error);
+        this.getBooks();
+      }
+    },
+    onDeleteBook(book) {
+      this.removeBook(book.id);
     }
   },
 

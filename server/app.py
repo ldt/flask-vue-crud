@@ -47,13 +47,14 @@ def all_books():
             'author': post_data.get('author'),
             'read': post_data.get('read')
         })
-        response_object['message'] = 'Book added!'
+        response_object['message'] = 'Book "{}" added!'.format(
+            post_data.get('title'))
     else:
         response_object['books'] = BOOKS
     return jsonify(response_object)
 
 
-@app.route('/books/<book_id>', methods=['PUT'])
+@app.route('/books/<book_id>', methods=['PUT', 'DELETE'])
 def single_book(book_id):
     response_object = {'status': 'success'}
     if request.method == 'PUT':
@@ -65,15 +66,27 @@ def single_book(book_id):
             'author': post_data.get('author'),
             'read': post_data.get('read')
         })
-        response_object['message'] = 'Book updated!'
+        response_object['message'] = 'Book "{}" was updated!'.format(
+            post_data.get('title'))
+    if request.method == 'DELETE':
+        book = remove_book(book_id)
+        response_object['message'] = 'Book "{}" removed!'.format(
+            book['title'])
     return jsonify(response_object)
 
 
-def remove_book(book_id):
+def get_book(book_id):
     for book in BOOKS:
         if book['id'] == book_id:
-            BOOKS.remove(book)
-            return True
+            return book
+    return None
+
+
+def remove_book(book_id):
+    book = get_book(book_id)
+    if book is not None:
+        BOOKS.remove(book)
+        return book
     return False
 
 
