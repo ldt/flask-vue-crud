@@ -158,7 +158,7 @@ export default {
       }
     },
     async addBook(payload) {
-      const path = "http://localhost:5000/books";
+      const path = "http://localhost:5000/books/";
       try {
         const response = await axios.post(path, payload);
         this.alert.message = response.data.message; // "Just added a book, congrats!";
