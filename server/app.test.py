@@ -13,7 +13,7 @@ class BasicTestCase(unittest.TestCase):
         assert b'pong pong' in response.data
 
 
-class FlaskrTestCase(unittest.TestCase):
+class ProjectTestCase(unittest.TestCase):
 
     def setUp(self):
         """Set up a blank temp database before each test."""

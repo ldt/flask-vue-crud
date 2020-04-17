@@ -1,6 +1,12 @@
-from flask import Flask, jsonify, request
-from flask_cors import CORS
+from flask import (
+    Blueprint, flash, g, redirect, render_template, request, url_for, jsonify
+)
+from flask_cors import CORS, cross_origin
+from werkzeug.exceptions import abort
+
 import uuid
+
+bp = Blueprint('books', __name__, url_prefix='/books')
 
 BOOKS = [
     {
@@ -24,19 +30,7 @@ BOOKS = [
 ]
 
 
-# configuration
-DEBUG = True
-
-# instantiate the app
-app = Flask(__name__)
-app.config.from_object(__name__)
-
-# enable CORS
-CORS(app, resources={r'/*': {'origins': '*'}})
-
-
-# @app.route('/books', methods=['GET'])
-@app.route('/books', methods=['GET', 'POST'])
+@bp.route('/', methods=['GET', 'POST'])
 def all_books():
     response_object = {'status': 'success'}
     if request.method == 'POST':
@@ -54,7 +48,7 @@ def all_books():
     return jsonify(response_object)
 
 
-@app.route('/books/<book_id>', methods=['PUT', 'DELETE'])
+@bp.route('/<book_id>', methods=['PUT', 'DELETE'])
 def single_book(book_id):
     response_object = {'status': 'success'}
     if request.method == 'PUT':
@@ -88,13 +82,3 @@ def remove_book(book_id):
         BOOKS.remove(book)
         return book
     return False
-
-
-# sanity check route
-@app.route('/ping', methods=['GET'])
-def ping_pong():
-    return jsonify('pong pong!')
-
-
-if __name__ == '__main__':
-    app.run()
