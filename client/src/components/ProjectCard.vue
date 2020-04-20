@@ -13,7 +13,8 @@
     </b-card-text>
 
     <b-button href="#" variant="primary">
-      <b-icon-box-arrow-in-right></b-icon-box-arrow-in-right> Enter</b-button
+      <b-icon-box-arrow-in-right></b-icon-box-arrow-in-right
+      ><router-link :to="'/project/' + project.id">Enter</router-link></b-button
     >
   </b-card>
 </template>

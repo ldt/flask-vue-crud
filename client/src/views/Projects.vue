@@ -59,54 +59,28 @@
 </template>
 
 <script>
-import axios from "axios";
 import { BIconFilePlus } from "bootstrap-vue";
 
 import Alert from "@/components/Alert.vue";
 import ProjectCard from "@/components/ProjectCard.vue";
 
+import { mapGetters, mapActions } from "vuex";
+
 export default {
   data() {
     return {
-      projects: [],
       addProjectForm: {
         title: "",
         summary: "",
         user_id: 1
-      },
-      alert: {
-        message: "",
-        dismissCountDown: 0
       }
     };
   },
-  computed: {},
+  computed: {
+    ...mapGetters(["projects", "alert"])
+  },
   methods: {
-    async getProjects() {
-      const path = "http://localhost:5000/project/";
-      try {
-        const response = await axios.get(path);
-        this.projects = response.data.projects;
-      } catch (error) {
-        // eslint-disable-next-line
-        console.error(error);
-      }
-    },
-    async addProject(payload) {
-      const path = "http://localhost:5000/project/";
-      try {
-        const response = await axios.post(path, payload);
-        // eslint-disable-next-line
-        console.log("add project response", response);
-        this.alert.message = response.data.message;
-        this.alert.dismissCountDown = 4;
-        this.getProjects();
-      } catch (error) {
-        // eslint-disable-next-line
-        console.log(error);
-        this.getProjects();
-      }
-    },
+    ...mapActions(["loadProjects", "addProject"]),
     initForm() {
       this.addProjectForm.title = "";
       this.addProjectForm.summary = "";
@@ -131,7 +105,7 @@ export default {
     }
   },
   created() {
-    this.getProjects();
+    this.loadProjects();
   },
 
   components: {

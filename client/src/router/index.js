@@ -3,8 +3,15 @@ import VueRouter from "vue-router";
 import Books from "@/components/Books.vue";
 import Home from "@/views/Home.vue";
 
-Vue.use(VueRouter);
+import store from "@/store";
 
+Vue.use(VueRouter);
+async function loadProjects(to, from, next) {
+  if (!store.getters.projects) {
+    await store.dispatch("loadProjects");
+    next();
+  }
+}
 const routes = [
   {
     path: "/",
@@ -15,6 +22,13 @@ const routes = [
     path: "/projects",
     name: "Projects",
     component: () => import(/* webpackChunkName: 'projects' */ "../views/Projects.vue")
+  },
+  {
+    path: "/project/:id",
+    name: "Project",
+    props: true,
+    beforeEnter: loadProjects,
+    component: () => import(/* webpackChunkName: 'projects' */ "../views/Project.vue")
   },
   {
     path: "/books",
