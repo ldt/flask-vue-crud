@@ -6,7 +6,10 @@
 cd server
 pipenv install
 pipenv shell
-python app.py
+
+export FLASK_APP=ner_project
+export FLASK_ENV=development
+flask run
 ```
 
 ### Vue
