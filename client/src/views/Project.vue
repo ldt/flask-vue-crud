@@ -3,36 +3,48 @@
     <h1>{{ currentProject.title }}</h1>
     <p>{{ currentProject.summary }}</p>
 
-    <h2>Configuration</h2>
-    <h3>Language</h3>
-    <b-form-group label="Choose the language of the model">
-      <b-form-radio v-model="language" name="model-language" value="EN-us">English</b-form-radio>
-      <b-form-radio v-model="language" name="model-language" value="FR-fr">Français</b-form-radio>
-    </b-form-group>
+    <b-row cols="2">
+      <b-col>
+        <h2><b-icon-tools /> Configuration</h2>
+        <h3><b-icon-flag /> Language</h3>
+        <b-form-group label="Choose the language of the model">
+          <b-form-radio v-model="language" name="model-language" value="EN-us"
+            >English</b-form-radio
+          >
+          <b-form-radio v-model="language" name="model-language" value="FR-fr"
+            >Français</b-form-radio
+          >
+        </b-form-group>
 
-    <h3>Classes</h3>
-    <div>
-      <vue-tags-input
-        v-model="tag"
-        :tags="tags"
-        :allow-edit-tags="true"
-        @tags-changed="newTags => (tags = newTags)"
-      />
-    </div>
-    <div>
-      <h2>Test Zone</h2>
-      <p>Insert here text editore configured with the classes set above</p>
-    </div>
-    <div class="mb-1">
-      <b-button variant="danger" @click="showMsgBoxTwo">Delete</b-button>
-      Return value: {{ String(boxTwo) }}
-    </div>
+        <h3><b-icon-tag-fill /> Classes</h3>
+        <div>
+          <vue-tags-input
+            v-model="tag"
+            :tags="tags"
+            :allow-edit-tags="true"
+            @tags-changed="newTags => (tags = newTags)"
+          />
+        </div>
+        <hr />
+        <div class="mb-1">
+          <b-button variant="danger" @click="showMsgBoxTwo">Delete</b-button>
+        </div>
+      </b-col>
+      <b-col>
+        <div>
+          <h2><b-icon-file-text /> Test Zone</h2>
+          <tiptap-ed />
+        </div>
+      </b-col>
+    </b-row>
   </b-container>
 </template>
 
 <script>
 import { mapGetters } from "vuex";
+import { BIconTools, BIconFileText, BIconFlag, BIconTagFill } from "bootstrap-vue";
 import VueTagsInput from "@johmun/vue-tags-input";
+import TiptapEd from "@/components/TiptapEd.vue";
 
 export default {
   props: {
@@ -79,7 +91,12 @@ export default {
     this.$store.commit("SET_CURRENT_PROJECT", { id: this.id });
   },
   components: {
-    VueTagsInput
+    VueTagsInput,
+    TiptapEd,
+    BIconTools,
+    BIconFileText,
+    BIconFlag,
+    BIconTagFill
   }
 };
 </script>
