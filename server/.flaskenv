@@ -1,0 +1,2 @@
+FLASK_APP=ner_project
+FLASK_ENV=development
