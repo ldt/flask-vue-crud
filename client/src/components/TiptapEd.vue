@@ -11,25 +11,13 @@
         :style="`left: ${menu.left}px; bottom: ${menu.bottom}px;`"
       >
         <button
+          v-for="e in entities"
+          :key="e.levelName"
           class="menububble__button"
-          :class="{ 'is-active': isActive.customstyle({ level: 'action' }) }"
-          @click="commands.customstyle({ level: 'action' })"
+          :class="{ 'is-active': isActive.customstyle({ level: e.levelName }) }"
+          @click="commands.customstyle({ level: e.cssName })"
         >
-          Action
-        </button>
-        <button
-          class="menububble__button"
-          :class="{ 'is-active': isActive.customstyle({ level: 'tool' }) }"
-          @click="commands.customstyle({ level: 'tool' })"
-        >
-          Tool
-        </button>
-        <button
-          class="menububble__button"
-          :class="{ 'is-active': isActive.customstyle({ level: 'part' }) }"
-          @click="commands.customstyle({ level: 'part' })"
-        >
-          Part
+          {{ e.tooltipName }}
         </button>
       </div>
     </editor-menu-bubble>
@@ -60,7 +48,33 @@ import {
 } from "tiptap-extensions";
 import CustomStyle from "./CustomStyle";
 
+const namedEntities = [
+  {
+    tooltipName: "Action",
+    cssName: "ner-action",
+    levelName: "levelAction"
+  },
+  {
+    tooltipName: "Tool",
+    cssName: "ner-tool",
+    levelName: "levelTool"
+  },
+  {
+    tooltipName: "Part",
+    cssName: "ner-part",
+    levelName: "levelPart"
+  }
+];
+
 export default {
+  props: {
+    entities: {
+      type: Array,
+      default: () => {
+        return namedEntities;
+      }
+    }
+  },
   components: {
     EditorContent,
     EditorMenuBubble
@@ -122,6 +136,7 @@ export default {
         }
       };
 
+      // eslint-disable-next-line
       return new Editor({
         editorProps: edProps,
         extensions: [
@@ -141,7 +156,7 @@ export default {
           new Strike(),
           new Underline(),
           new History(),
-          new CustomStyle()
+          new CustomStyle(this.entities)
         ],
         content: `
 <h1>Remove synchronization rope</h1>
