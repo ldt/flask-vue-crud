@@ -34,15 +34,12 @@ def create_app(test_config=None):
     from . import auth
     app.register_blueprint(auth.bp)
 
-    from . import books
-    app.register_blueprint(books.bp)
-
     from . import project
     app.register_blueprint(project.bp)
 
-    from . import blog
-    app.register_blueprint(blog.bp)
-    app.add_url_rule('/', endpoint='index')
+    # from . import blog
+    # app.register_blueprint(blog.bp)
+    # app.add_url_rule('/', endpoint='index')
 
     # enable CORS
     CORS(app)
