@@ -6,11 +6,7 @@ const path = "http://0.0.0.0:5000/project/";
 export default {
   state: {
     projects: null,
-    currentProject: null,
-    alert: {
-      message: "",
-      dismissCountDown: 0
-    }
+    currentProject: null
   },
   getters: {
     projects: state => {
@@ -45,16 +41,28 @@ export default {
         console.error(error);
       }
     },
-    async addProject({ commit, dispatch }, payload) {
+    async addProject({ dispatch }, payload) {
       try {
         const response = await axios.post(path, payload);
         // eslint-disable-next-line
         console.log("add project response", response);
-        commit("SET_ALERT", { message: response.data.message, dismissCountDown: 4 });
         dispatch("loadProjects");
       } catch (error) {
         // eslint-disable-next-line
         console.log(error);
+      }
+    },
+    async deleteProject({ dispatch }, payload) {
+      try {
+        const projectPath = `${path}${payload.id}`;
+        const response = await axios.delete(projectPath);
+        // eslint-disable-next-line
+        console.log("delete project back end response", response);
+        // update the list of project
+        dispatch("loadProjects");
+      } catch (error) {
+        // eslint-disable-next-line
+        console.error(error);
       }
     }
   }

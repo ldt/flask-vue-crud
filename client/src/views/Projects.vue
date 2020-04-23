@@ -1,6 +1,6 @@
 <template>
   <div>
-    <alert :message="alert.message" :dismissCountDown="alert.dismissCountDown"></alert>
+    <!-- <alert :message="alert.message" :dismissCountDown="alert.dismissCountDown"></alert> -->
     <b-container class="project-container">
       <b-row cols="3">
         <b-col>
@@ -25,8 +25,6 @@
         <b-col v-for="p in projects" :key="p.id">
           <project-card :project="p" />
         </b-col>
-        <b-col><project-card :project="{ title: 'MIAM', summary: 'research project' }"/></b-col>
-        <b-col><project-card :project="{ title: 'KONE', summary: 'SMART prototype' }"/></b-col>
       </b-row>
     </b-container>
     <b-modal ref="addProjectModal" id="project-modal" title="Add a new project" hide-footer>
@@ -61,7 +59,7 @@
 <script>
 import { BIconFilePlus } from "bootstrap-vue";
 
-import Alert from "@/components/Alert.vue";
+// import Alert from "@/components/Alert.vue";
 import ProjectCard from "@/components/ProjectCard.vue";
 
 import { mapGetters, mapActions } from "vuex";
@@ -77,7 +75,7 @@ export default {
     };
   },
   computed: {
-    ...mapGetters(["projects", "alert"])
+    ...mapGetters(["projects"])
   },
   methods: {
     ...mapActions(["loadProjects", "addProject"]),
@@ -110,7 +108,7 @@ export default {
 
   components: {
     ProjectCard,
-    Alert,
+    // Alert,
     BIconFilePlus
   }
 };

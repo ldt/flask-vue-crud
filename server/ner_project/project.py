@@ -64,3 +64,33 @@ def create_project():
 
 # 3 - Update an entity Project
 # 4 - Delete an entity Project
+@bp.route('/<project_id>', methods=['DELETE'])
+def delete_project(project_id):
+    project = remove_project(project_id)
+    response_object = {'status': 'deletion success'}
+    response_object['message'] = 'Project "{}" removed!'.format(
+        project['title'])
+    return jsonify(response_object)
+
+
+def get_project(project_id):
+    '''queries DB to get a project's data, can return the project data or None'''
+    return get_db().execute(
+        'SELECT p.id, title, summary, created, author_id'
+        ' FROM project p'  # ' JOIN user u ON p.author_id = u.id'
+        ' WHERE p.id = ?',
+        (project_id,)
+    ).fetchone()
+
+
+def remove_project(project_id):
+    '''checks that the project exists, delete it and return its data or False if not found'''
+    db = get_db()
+    project = get_project(project_id)
+
+    if project is not None:
+        db.execute('DELETE FROM project WHERE id = ?', (project_id,))
+        db.commit()
+        print('project', project_id, 'should have been deleted')
+        return project
+    return False

@@ -41,7 +41,7 @@
 </template>
 
 <script>
-import { mapGetters } from "vuex";
+import { mapGetters, mapActions } from "vuex";
 import { BIconTools, BIconFileText, BIconFlag, BIconTagFill } from "bootstrap-vue";
 import VueTagsInput from "@johmun/vue-tags-input";
 import TiptapEd from "@/components/TiptapEd.vue";
@@ -62,29 +62,33 @@ export default {
     ...mapGetters(["currentProject", "alert"])
   },
   methods: {
-    showMsgBoxTwo() {
+    ...mapActions(["deleteProject"]),
+    async showMsgBoxTwo() {
       this.boxTwo = "";
-      this.$bvModal
-        .msgBoxConfirm("Please confirm that you want to delete this project.", {
-          title: "Please Confirm",
-          size: "sm",
-          buttonSize: "sm",
-          okVariant: "danger",
-          okTitle: "YES",
-          cancelTitle: "NO",
-          footerClass: "p-2",
-          hideHeaderClose: false,
-          centered: true
-        })
-        .then(value => {
-          this.boxTwo = value;
-          // eslint-disable-next-line
-          console.log("value", value, "was clicked");
-        })
-        .catch(err => {
-          // eslint-disable-next-line
-          console.err(err);
-        });
+      try {
+        const value = await this.$bvModal.msgBoxConfirm(
+          "Please confirm that you want to delete this project.",
+          {
+            title: "Please Confirm",
+            size: "sm",
+            buttonSize: "sm",
+            okVariant: "danger",
+            okTitle: "YES",
+            cancelTitle: "NO",
+            footerClass: "p-2",
+            hideHeaderClose: false,
+            centered: true
+          }
+        );
+        this.boxTwo = value;
+        if (value === true) {
+          await this.deleteProject({ id: this.currentProject.id });
+          this.$router.push({ path: "/projects" });
+        }
+      } catch (error) {
+        // eslint-disable-next-line
+        console.error(error);
+      }
     }
   },
   created() {
