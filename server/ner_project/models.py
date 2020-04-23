@@ -28,7 +28,8 @@ class Project(db.Model):
             "id": self.id,
             "name": self.name,
             "summary": self.summary,
-            "created": self.created.isoformat()
+            "created": self.created.isoformat(),
+            "entities": [e.as_json for e in self.entity_classes]
         }
 
     def __repr__(self):
