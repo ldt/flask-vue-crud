@@ -1,7 +1,7 @@
 import axios from "axios";
 import _ from "lodash";
 
-const path = "http://localhost:5000/project/";
+const path = "http://0.0.0.0:5000/project/";
 
 export default {
   state: {

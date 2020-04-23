@@ -9,8 +9,8 @@ Vue.use(VueRouter);
 async function loadProjects(to, from, next) {
   if (!store.getters.projects) {
     await store.dispatch("loadProjects");
-    next();
   }
+  next();
 }
 const routes = [
   {
