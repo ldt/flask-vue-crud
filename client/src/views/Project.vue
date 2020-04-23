@@ -1,6 +1,6 @@
 <template>
   <b-container>
-    <h1>{{ currentProject.title }}</h1>
+    <h1>{{ currentProject.name }}</h1>
     <p>{{ currentProject.summary }}</p>
 
     <b-row cols="2">

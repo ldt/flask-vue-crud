@@ -1,6 +1,6 @@
 <template>
   <b-card
-    :title="title"
+    :title="project.name"
     :img-src="img_src"
     img-alt="Image"
     img-top
@@ -9,7 +9,7 @@
     class="mb-2"
   >
     <b-card-text>
-      {{ summary }}
+      {{ project.summary }}
     </b-card-text>
 
     <b-button href="#" variant="primary">
@@ -24,23 +24,15 @@ import { BIconBoxArrowInRight } from "bootstrap-vue";
 
 export default {
   props: {
-    description: { type: String, default: "" },
     project: { type: Object, default: null }
   },
   data() {
     return {};
   },
   computed: {
-    title() {
-      return this.project.title;
-    },
-    summary() {
-      if (!this.project) return this.description;
-      return this.project.summary;
-    },
     img_src() {
-      if (this.title) {
-        const firstWord = this.title.split(" ")[0];
+      if (this.project.name) {
+        const firstWord = this.project.name.split(" ")[0];
         return `https://picsum.photos/seed/${firstWord}/200/200`;
       }
       return `https://picsum.photos/200/200`;

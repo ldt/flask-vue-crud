@@ -29,13 +29,13 @@
     </b-container>
     <b-modal ref="addProjectModal" id="project-modal" title="Add a new project" hide-footer>
       <b-form @submit="onSubmit" @reset="onReset" class="w-100">
-        <b-form-group id="form-title-group" label="Title:" label-for="form-title-input">
+        <b-form-group id="form-name-group" label="Title:" label-for="form-name-input">
           <b-form-input
-            id="form-title-input"
+            id="form-name-input"
             type="text"
-            v-model="addProjectForm.title"
+            v-model="addProjectForm.name"
             required
-            placeholder="Enter title"
+            placeholder="Enter name"
           >
           </b-form-input>
         </b-form-group>
@@ -68,7 +68,7 @@ export default {
   data() {
     return {
       addProjectForm: {
-        title: "",
+        name: "",
         summary: "",
         user_id: 1
       }
@@ -80,14 +80,14 @@ export default {
   methods: {
     ...mapActions(["loadProjects", "addProject"]),
     initForm() {
-      this.addProjectForm.title = "";
+      this.addProjectForm.name = "";
       this.addProjectForm.summary = "";
     },
     onSubmit(evt) {
       evt.preventDefault();
       this.$refs.addProjectModal.hide();
       const payload = {
-        title: this.addProjectForm.title,
+        name: this.addProjectForm.name,
         summary: this.addProjectForm.summary,
         user_id: this.addProjectForm.user_id
       };
