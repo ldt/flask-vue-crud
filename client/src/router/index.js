@@ -1,6 +1,5 @@
 import Vue from "vue";
 import VueRouter from "vue-router";
-import Books from "@/components/Books.vue";
 import Home from "@/views/Home.vue";
 
 import store from "@/store";
@@ -29,11 +28,6 @@ const routes = [
     props: true,
     beforeEnter: loadProjects,
     component: () => import(/* webpackChunkName: 'projects' */ "../views/Project.vue")
-  },
-  {
-    path: "/books",
-    name: "Books",
-    component: Books
   }
 ];
 
