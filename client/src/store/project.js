@@ -1,3 +1,4 @@
+import Vue from "vue";
 import axios from "axios";
 import _ from "lodash";
 
@@ -15,8 +16,8 @@ export default {
     currentProject: state => {
       return state.currentProject;
     },
-    alert: state => {
-      return state.alert;
+    currentEntities: state => {
+      return state.currentProject.entities;
     }
   },
   mutations: {
@@ -24,10 +25,7 @@ export default {
       state.projects = data.projects;
     },
     SET_CURRENT_PROJECT(state, data) {
-      state.currentProject = state.projects[data.id];
-    },
-    SET_ALERT(state, data) {
-      state.alert = data.alert;
+      Vue.set(state, "currentProject", state.projects[data.id]);
     }
   },
   actions: {
@@ -41,9 +39,9 @@ export default {
         console.error(error);
       }
     },
-    async addProject({ dispatch }, payload) {
+    async addProject({ dispatch }, data) {
       try {
-        const response = await axios.post(path, payload);
+        const response = await axios.post(path, data);
         // eslint-disable-next-line
         console.log("add project response", response);
         dispatch("loadProjects");
@@ -52,9 +50,9 @@ export default {
         console.log(error);
       }
     },
-    async deleteProject({ dispatch }, payload) {
+    async deleteProject({ dispatch }, data) {
       try {
-        const projectPath = `${path}${payload.id}`;
+        const projectPath = `${path}${data.id}`;
         const response = await axios.delete(projectPath);
         // eslint-disable-next-line
         console.log("delete project back end response", response);
@@ -64,6 +62,30 @@ export default {
         // eslint-disable-next-line
         console.error(error);
       }
+    },
+    async updateProjectEntities({ commit, dispatch }, data) {
+      try {
+        const projectPath = `${path}${data.projectId}/entities`;
+        await axios.post(projectPath, data);
+        // console.log("updateProjectEntities", response);
+        await dispatch("loadProjects");
+        commit("SET_CURRENT_PROJECT", { id: data.projectId });
+      } catch (error) {
+        // eslint-disable-next-line
+        console.error(error);
+      }
+    },
+    async deleteProjectEntity({ commit, dispatch }, data) {
+      try {
+        const projectPath = `${path}${data.projectId}/entity/${data.entityName}`;
+        await axios.delete(projectPath, data);
+        // console.log("deleteProjectEntity", response);
+        await dispatch("loadProjects");
+        commit("SET_CURRENT_PROJECT", { id: data.projectId });
+      } catch (error) {
+        // eslint-disable-next-line
+        console.error(error);
+      }
     }
-  }
+  } // end of actions
 };

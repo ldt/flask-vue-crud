@@ -27,6 +27,8 @@
 </template>
 
 <script>
+import { mapGetters } from "vuex";
+
 import { Editor, EditorContent, EditorMenuBubble } from "tiptap";
 import {
   Blockquote,
@@ -48,33 +50,7 @@ import {
 } from "tiptap-extensions";
 import CustomStyle from "./CustomStyle";
 
-const namedEntities = [
-  {
-    tooltipName: "Action",
-    cssName: "ner-action",
-    levelName: "levelAction"
-  },
-  {
-    tooltipName: "Tool",
-    cssName: "ner-tool",
-    levelName: "levelTool"
-  },
-  {
-    tooltipName: "Part",
-    cssName: "ner-part",
-    levelName: "levelPart"
-  }
-];
-
 export default {
-  props: {
-    entities: {
-      type: Array,
-      default: () => {
-        return namedEntities;
-      }
-    }
-  },
   components: {
     EditorContent,
     EditorMenuBubble
@@ -82,13 +58,27 @@ export default {
   data() {
     return {
       keepInBounds: true,
-      editor: this.createEditor()
+      editor: this.createEditor(),
+      entities: []
     };
   },
-  beforeDestroy() {
-    this.editor.destroy();
+  computed: {
+    ...mapGetters(["currentEntities", "currentProject"])
   },
   methods: {
+    updateEntityList() {
+      // fill this.entities by parsing this.currentEntities
+      this.entities = [];
+      let i = 0;
+      this.currentEntities.forEach(element => {
+        this.entities.push({
+          tooltipName: element.name.toUpperCase(),
+          cssName: `ner-${i}`,
+          levelName: element.name.toLowerCase()
+        });
+        i += 1;
+      });
+    },
     handleMouseUp(view) {
       const from = view.state.selection.$anchor.pos;
       const to = view.state.selection.$head.pos;
@@ -179,6 +169,22 @@ Related tasks
         `
       });
     }
+  },
+  beforeDestroy() {
+    this.editor.destroy();
+  },
+  mounted() {
+    this.updateEntityList();
+
+    // this.$store.subscribe(mutation => {
+    //   console.log("mutation.type", mutation.type);
+    //   console.log("mutation.payload", mutation.payload);
+    // });
+    this.$store.subscribe(mutation => {
+      if (mutation.type === "SET_CURRENT_PROJECT") {
+        this.updateEntityList();
+      }
+    });
   }
 };
 </script>

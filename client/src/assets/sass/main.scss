@@ -1,13 +1,15 @@
-@import "./variables";
+@import './variables';
 
-
-.ner-action {
+.ner-0 {
+  background-color: yellow;
+}
+.ner-1 {
   background-color: green;
 }
-.ner-tool {
+.ner-2 {
   background-color: blue;
 }
-.ner-part {
+.ner-3 {
   background-color: red;
 }
 
@@ -98,6 +100,6 @@ h3 {
   font-style: italic;
 }
 
-@import "./editor";
-@import "./menubar";
-@import "./menububble";
+@import './editor';
+@import './menubar';
+@import './menububble';

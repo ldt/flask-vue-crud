@@ -87,9 +87,12 @@ def add_project_entities(project_id):
             if existing_entity is not None:
                 print('existing entity:', existing_entity)
                 continue
-            e = EntityClass(name=entity, project_id=project.id)
+            e = EntityClass(name=entity, project=project)
             db.session.add(e)
         db.session.commit()
+    response_object = {'status': 'success'}
+    response_object['project'] = project.as_json
+    return jsonify(response_object)
 
 
 @bp.route('/<project_id>/entities', methods=['GET'])
@@ -102,7 +105,7 @@ def all_project_entities(project_id):
     return jsonify(response_object)
 
 
-@bp.route('/<project_id>/entities/entity_name', methods=['DELETE'])
+@bp.route('/<project_id>/entity/<entity_name>', methods=['DELETE'])
 def delete_project_entity(project_id, entity_name):
     '''deletes an entity with the specified name for the specified project'''
     project = get_project(project_id)
@@ -110,4 +113,5 @@ def delete_project_entity(project_id, entity_name):
         project=project, name=entity_name).first()
     db.session.delete(entity)
     db.session.commit()
-    return jsonify({'status': 'deletion success', message: 'Entity {} was deleted'.format(entity.name)})
+    return jsonify({'status': 'deletion success',
+                    'message': 'Entity {} was deleted'.format(entity.name)})

@@ -22,7 +22,8 @@
             v-model="tag"
             :tags="tags"
             :allow-edit-tags="true"
-            @tags-changed="newTags => (tags = newTags)"
+            @tags-changed="handleTagsChanged"
+            @before-deleting-tag="handleDeletionTag"
           />
         </div>
         <hr />
@@ -45,6 +46,7 @@ import { mapGetters, mapActions } from "vuex";
 import { BIconTools, BIconFileText, BIconFlag, BIconTagFill } from "bootstrap-vue";
 import VueTagsInput from "@johmun/vue-tags-input";
 import TiptapEd from "@/components/TiptapEd.vue";
+import _ from "lodash";
 
 export default {
   props: {
@@ -59,10 +61,25 @@ export default {
     };
   },
   computed: {
-    ...mapGetters(["currentProject", "alert"])
+    ...mapGetters(["currentProject"])
   },
   methods: {
-    ...mapActions(["deleteProject"]),
+    ...mapActions(["deleteProject", "updateProjectEntities", "deleteProjectEntity"]),
+    handleTagsChanged(newTags) {
+      const entities = _.map(newTags, "text");
+      this.updateProjectEntities({
+        projectId: this.currentProject.id,
+        entities
+      });
+      this.tags = newTags;
+    },
+    handleDeletionTag(deletionTagData) {
+      this.deleteProjectEntity({
+        projectId: this.currentProject.id,
+        entityName: deletionTagData.tag.text
+      });
+      deletionTagData.deleteTag();
+    },
     async showMsgBoxTwo() {
       this.boxTwo = "";
       try {
@@ -93,6 +110,11 @@ export default {
   },
   created() {
     this.$store.commit("SET_CURRENT_PROJECT", { id: this.id });
+  },
+  mounted() {
+    this.currentProject.entities.forEach(element => {
+      this.tags.push({ text: element.name });
+    });
   },
   components: {
     VueTagsInput,
