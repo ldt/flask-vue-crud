@@ -1,29 +1,35 @@
 <template>
-  <div class="editor">
-    <editor-menu-bubble
-      :editor="editor"
-      :keep-in-bounds="keepInBounds"
-      v-slot="{ commands, isActive, menu }"
-    >
-      <div
-        class="menububble"
-        :class="{ 'is-active': menu.isActive }"
-        :style="`left: ${menu.left}px; bottom: ${menu.bottom}px;`"
+  <b-row cols="2">
+    <div class="editor editor-zone">
+      <editor-menu-bubble
+        :editor="editor"
+        :keep-in-bounds="keepInBounds"
+        v-slot="{ commands, isActive, menu }"
       >
-        <button
-          v-for="e in entities"
-          :key="e.levelName"
-          class="menububble__button"
-          :class="{ 'is-active': isActive.customstyle({ level: e.levelName }) }"
-          @click="commands.customstyle({ level: e.cssName })"
+        <div
+          class="menububble"
+          :class="{ 'is-active': menu.isActive }"
+          :style="`left: ${menu.left}px; bottom: ${menu.bottom}px;`"
         >
-          {{ e.tooltipName }}
-        </button>
-      </div>
-    </editor-menu-bubble>
+          <button
+            v-for="e in entities"
+            :key="e.levelName"
+            class="menububble__button"
+            :class="{ 'is-active': isActive.customstyle({ level: e.cssName }) }"
+            @click="commands.customstyle({ level: e.cssName })"
+          >
+            {{ e.tooltipName }}
+          </button>
+        </div>
+      </editor-menu-bubble>
 
-    <editor-content class="editor__content" :editor="editor" />
-  </div>
+      <editor-content class="editor__content" :editor="editor" />
+    </div>
+    <div class="json-zone">
+      <h3>JSON</h3>
+      <pre><code v-html="json"></code></pre>
+    </div>
+  </b-row>
 </template>
 
 <script>
@@ -59,7 +65,8 @@ export default {
     return {
       keepInBounds: true,
       editor: this.createEditor(),
-      entities: []
+      entities: [],
+      json: "update content to see a change here"
     };
   },
   computed: {
@@ -166,7 +173,10 @@ Related tasks
 -   Take elevator out of service
 -   Prepare before replacement
 </p>
-        `
+        `,
+        onUpdate: ({ getJSON }) => {
+          this.json = getJSON();
+        }
       });
     }
   },
@@ -188,8 +198,43 @@ Related tasks
   }
 };
 </script>
-<style lang="scss" src="./style.scss">
-.editor {
-  border: 1px solid blue;
+<style lang="scss">
+@import "@/assets/sass/variables.scss";
+@import "@/assets/sass/main.scss";
+// @import "variables";
+
+.page {
+  &__content {
+    padding: 4rem 1rem;
+  }
+
+  &__footer {
+    text-align: center;
+    margin-bottom: 2rem;
+  }
+
+  &__source-link {
+    display: inline-block;
+    text-decoration: none;
+    text-transform: uppercase;
+    font-weight: bold;
+    font-size: 0.8rem;
+    background-color: rgba($color-black, 0.1);
+    color: $color-black;
+    border-radius: 5px;
+    padding: 0.2rem 0.5rem;
+  }
+}
+
+.editor-zone {
+  border: solid 1px blue;
+  padding: 16px;
+  background-color: #93d9e4;
+}
+
+.json-zone {
+  border: dotted 1px gray;
+  padding-left: 8px;
+  // margin: 2px;
 }
 </style>

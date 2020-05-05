@@ -1,9 +1,9 @@
 <template>
-  <b-container>
+  <div class="project-container">
     <h1>{{ currentProject.name }}</h1>
     <p>{{ currentProject.summary }}</p>
 
-    <b-row cols="2">
+    <b-row>
       <b-col>
         <h2><b-icon-tools /> Configuration</h2>
         <h3><b-icon-flag /> Language</h3>
@@ -31,14 +31,14 @@
           <b-button variant="danger" @click="showMsgBoxTwo">Delete</b-button>
         </div>
       </b-col>
-      <b-col>
+      <b-col cols="8">
         <div>
           <h2><b-icon-file-text /> Test Zone</h2>
           <tiptap-ed />
         </div>
       </b-col>
     </b-row>
-  </b-container>
+  </div>
 </template>
 
 <script>
@@ -127,4 +127,8 @@ export default {
 };
 </script>
 
-<style></style>
+<style>
+.project-container {
+  padding: 24px;
+}
+</style>
